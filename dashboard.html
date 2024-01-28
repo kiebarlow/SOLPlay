@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-green-500 p-4">
+
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-semibold mb-4 text-white">Dashboard</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for song in songs %}
+                {% if song.State == 'Pending' %}
+                    <div class="bg-white p-4 rounded-md shadow-md">
+                        <h2 class="text-xl font-bold mb-2">{{ song.SongName }}</h2>
+                        <p class="text-gray-700 mb-2">Artist: {{ song.SongArtist }}</p>
+                        <p class="text-gray-600">{{ song.SpecialMessage }}</p>
+                        <p class="text-gray-600">{{ song.Price }}</p>
+        
+                        <!-- Buttons for tick and cross -->
+                        <div class="mt-4 flex justify-between">
+                            <button onclick="changeState('{{ userId }}', '{{ song.UniqueId }}', 'Accepted', '{{ song.Price }}', '{{ song.PaidFrom}}')" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">✔</button>
+                            <button onclick="changeState('{{ userId }}', '{{ song.UniqueId }}', 'Declined', '{{ song.Price }}', '{{ song.PaidFrom}}')"  class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300">×</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <h1 class="text-3xl font-semibold mb-4 text-white">Accepted Songs</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for song in songs %}
+                {% if song.State == 'Accepted' %}
+                    <div class="bg-white p-4 rounded-md shadow-md">
+                        <h2 class="text-xl font-bold mb-2">{{ song.SongName }}</h2>
+                        <p class="text-gray-700 mb-2">Artist: {{ song.SongArtist }}</p>
+                        <p class="text-gray-600">{{ song.SpecialMessage }}</p>
+                        <p class="text-gray-600">{{ song.Price }}</p>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <script>
+            var uniqueIdTWO = "{{ userId }}";
+            console.log(uniqueIdTWO); 
+
+            
+
+
+            function changeState(uniqueIdTWO, songUniqueId, newState, songPrice, songPaidFrom){
+                var payload = {
+                    userId: uniqueIdTWO,
+                    uniqueSongId: songUniqueId,
+                    newState: newState,
+                    songPrice: songPrice,
+                    songPaidFrom: songPaidFrom
+                };
+                var jsonString = JSON.stringify(payload);
+                console.log(jsonString);
+                // Create XMLHttpRequest
+                var request = new XMLHttpRequest();
+                request.open("POST", 'https://f41500d7-b6cd-42f5-978e-105462cc503b-00-127igwaic3r9j.spock.replit.dev/api/changeSongState', true);
+                request.setRequestHeader("Content-Type", "application/json");
+
+                request.send(jsonString);
+              setTimeout(function(){
+                  location.reload();
+                }, 2000);
+                // location.reload();
+            }
+        </script>
+
+        <!-- Centered small QR Code button -->
+        <div class="flex justify-center mt-4">
+            <button id="qr" onclick="window.location.href='/qrCode'" class="px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">QR CODE</button>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

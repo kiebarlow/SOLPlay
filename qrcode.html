@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-green-500 min-h-screen flex items-center justify-center" onload="generateQRCode()">
+
+    <!-- Add a hidden input to store the userId -->
+    <input type="hidden" id="userId" value="your_user_id">
+
+    <!-- Display the generated QR code -->
+    <div id="qr_code_container" class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4 text-green-500"></h2>
+
+        <div class="flex items-center justify-center">
+            <img id="qr_code_image" class="max-w-full" src="" alt="QR Code">
+        </div>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            // Get the userId from the hidden input
+            var userId = document.getElementById('userId').value;
+
+            // Construct the API URL with the userId
+            var apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https://f41500d7-b6cd-42f5-978e-105462cc503b-00-127igwaic3r9j.spock.replit.dev/payforsong/{{userId}}`;
+
+            // Set the source of the image element
+            var imgElement = document.getElementById('qr_code_image');
+            imgElement.src = apiUrl;
+        }
+    </script>
+</body>
+</html>
